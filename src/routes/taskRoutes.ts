@@ -19,15 +19,19 @@ router.post("/", (req, res) => {
 });
 
 router.put("/:id", (req, res) => {
-  const task = tasks.find((task) => task.id === parseInt(req.params.id));
+
+  const task = tasks.find((task) => task.id === req.params.id);
+
   if (task) {
+
     task.title = req.body.title || task.title;
-    task.completed = req.body.completed ?? task.completed;
+    task.status = req.body.status || task.status;
     res.json(task);
   } else {
     res.status(404).json({ error: "Task not found" });
   }
 });
+
 
 router.delete("/:id", (req, res) => {
   const index = tasks.findIndex((task) => task.id === parseInt(req.params.id));
