@@ -35,7 +35,7 @@ task-manager-api/
 └── README.md # Project documentation
 
 markdown
-Kopiera kod
+
 
 ## Setup
 
@@ -52,19 +52,19 @@ Kopiera kod
 Install dependencies:
 
 bash
-Kopiera kod
+
 npm install
 Run the server:
 
 bash
-Kopiera kod
+
 npm start
 The API will be available at http://localhost:3000.
 
 Run tests (optional):
 
 bash
-Kopiera kod
+
 npm test
 API Endpoints
 Task Routes
@@ -81,7 +81,7 @@ Create a Task
 Request:
 
 http
-Kopiera kod
+
 POST /tasks
 Content-Type: application/json
 
@@ -91,7 +91,7 @@ Content-Type: application/json
 Response:
 
 json
-Kopiera kod
+
 {
   "id": "unique-task-id",
   "title": "Complete project",
@@ -101,12 +101,12 @@ Get All Tasks
 Request:
 
 http
-Kopiera kod
+
 GET /tasks
 Response:
 
 json
-Kopiera kod
+
 [
   {
     "id": "unique-task-id",
@@ -118,7 +118,7 @@ Update a Task
 Request:
 
 http
-Kopiera kod
+
 PUT /tasks/unique-task-id
 Content-Type: application/json
 
@@ -129,7 +129,7 @@ Content-Type: application/json
 Response:
 
 json
-Kopiera kod
+
 {
   "id": "unique-task-id",
   "title": "Complete math homework",
@@ -139,20 +139,19 @@ Delete a Task
 Request:
 
 http
-Kopiera kod
+
 DELETE /tasks/unique-task-id
 Response:
 
 http
-Kopiera kod
+
 204 No Content
 Future Improvements
 Database Integration: Use a database instead of in-memory storage for persistent data.
 Authentication: Add user authentication and authorization.
 Error Handling: Improve error handling and validation feedback.
+
 License
 This project is licensed under the MIT License.
 
 Thank you for using the Task Manager API!
-
-vbnet
