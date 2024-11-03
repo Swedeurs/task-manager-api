@@ -33,4 +33,3 @@ describe("Task Routes", () => {
     const getRes = await request(app).get(`/tasks/${taskId}`);
     expect(getRes.status).toBe(404);
   });
-});
