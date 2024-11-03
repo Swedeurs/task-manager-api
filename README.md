@@ -19,7 +19,20 @@ The Task Manager API is a RESTful service built with **Express** and **TypeScrip
 
 ## Project Structure
 
-task-manager-api/ ├── src/ │ ├── app.ts # Main app entry │ ├── routes/ # API route handlers │ ├── services/ # Business logic for tasks │ ├── models/ # Data models and validation │ └── tests/ # Tests for API endpoints ├── tsconfig.json # TypeScript configuration ├── jest.config.js # Jest configuration ├── package.json # Project metadata and dependencies └── README.md # Project documentation
+task-manager-api/ 
+├── src/ │ 
+├── app.ts # Main app entry 
+│ 
+├── routes/ # API route handlers 
+│ 
+├── services/ # Business logic for tasks
+│ 
+├── models/ # Data models and validation 
+│ └── tests/ # Tests for API endpoints 
+├── tsconfig.json # TypeScript configuration 
+├── jest.config.js # Jest configuration 
+├── package.json # Project metadata and dependencies 
+└── README.md # Project documentation
 
 markdown
 Kopiera kod
