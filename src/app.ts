@@ -4,8 +4,8 @@ import userRoutes from "./routes/userRoutes";
 const app = express();
 const PORT = 3000;
 
-app.use("/tasks", taskRoutes);
 app.use(express.json());
+app.use("/tasks", taskRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to the Task Manager API!");
