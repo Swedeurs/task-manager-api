@@ -19,23 +19,22 @@ The Task Manager API is a RESTful service built with **Express** and **TypeScrip
 
 ## Project Structure
 
-task-manager-api/ 
-├── src/ │ 
-├── app.ts # Main app entry 
-│ 
-├── routes/ # API route handlers 
-│ 
+task-manager-api/
+├── src/ │
+├── app.ts # Main app entry
+│
+├── routes/ # API route handlers
+│
 ├── services/ # Business logic for tasks
-│ 
-├── models/ # Data models and validation 
-│ └── tests/ # Tests for API endpoints 
-├── tsconfig.json # TypeScript configuration 
-├── jest.config.js # Jest configuration 
-├── package.json # Project metadata and dependencies 
+│
+├── models/ # Data models and validation
+│ └── tests/ # Tests for API endpoints
+├── tsconfig.json # TypeScript configuration
+├── jest.config.js # Jest configuration
+├── package.json # Project metadata and dependencies
 └── README.md # Project documentation
 
 markdown
-
 
 ## Setup
 
@@ -49,7 +48,8 @@ markdown
    ```bash
    git clone https://github.com/yourusername/task-manager-api.git
    cd task-manager-api
-Install dependencies:
+   Install dependencies:
+   ```
 
 bash
 
@@ -71,14 +71,15 @@ Task Routes
 GET /tasks - Retrieve all tasks
 POST /tasks - Create a new task
 GET /tasks/
+
 - Retrieve a specific task by ID
-PUT /tasks/
+  PUT /tasks/
 - Update a task by ID
-DELETE /tasks/
+  DELETE /tasks/
 - Delete a task by ID
-Example Requests
-Create a Task
-Request:
+  Example Requests
+  Create a Task
+  Request:
 
 http
 
@@ -86,16 +87,16 @@ POST /tasks
 Content-Type: application/json
 
 {
-  "title": "Complete project"
+"title": "Complete project"
 }
 Response:
 
 json
 
 {
-  "id": "unique-task-id",
-  "title": "Complete project",
-  "completed": false
+"id": "unique-task-id",
+"title": "Complete project",
+"completed": false
 }
 Get All Tasks
 Request:
@@ -108,11 +109,11 @@ Response:
 json
 
 [
-  {
-    "id": "unique-task-id",
-    "title": "Complete project",
-    "completed": false
-  }
+{
+"id": "unique-task-id",
+"title": "Complete project",
+"completed": false
+}
 ]
 Update a Task
 Request:
@@ -123,17 +124,17 @@ PUT /tasks/unique-task-id
 Content-Type: application/json
 
 {
-  "title": "Complete math homework",
-  "completed": true
+"title": "Complete math homework",
+"completed": true
 }
 Response:
 
 json
 
 {
-  "id": "unique-task-id",
-  "title": "Complete math homework",
-  "completed": true
+"id": "unique-task-id",
+"title": "Complete math homework",
+"completed": true
 }
 Delete a Task
 Request:
