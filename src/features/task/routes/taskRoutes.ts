@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request, Response } from "express";
-import express from "express";
 import * as TaskService from "../services/taskService";
 import { validateUpdateTask } from "../validation/taskValidation";
 import router from "../../user/routes/userRoutes";
