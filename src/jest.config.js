@@ -1,9 +1,7 @@
-module.exports = {
-  preset: "ts-jest",
-  testEnvironment: "node",
-  transform: {
+export const preset = "ts-jest";
+export const testEnvironment = "node";
+export const transform = {
     "^.+\\.tsx?$": "ts-jest",
-  },
-  moduleFileExtensions: ["ts", "js", "json", "node"],
-  transformIgnorePatterns: ["<rootDir>/node_modules/"],
 };
+export const moduleFileExtensions = ["ts", "js", "json", "node"];
+export const transformIgnorePatterns = ["<rootDir>/node_modules/"];
