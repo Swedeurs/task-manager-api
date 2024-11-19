@@ -1,4 +1,5 @@
-import { Task, TaskSchema } from "../models/taskModel";
+import { Task, TaskSchema } from "../models/task";
+
 
 const tasks: Task[] = [];
 
@@ -16,7 +17,7 @@ export const getTaskById = async (id: string): Promise<Task | undefined> => {
 
 export const updateTask = async (
   id: string,
-  data: Partial<Task>,
+  data: Partial<Task>
 ): Promise<Task | undefined> => {
   const index = tasks.findIndex((task) => task.id === id);
   if (index === -1) return undefined;
