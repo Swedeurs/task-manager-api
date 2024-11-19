@@ -1,6 +1,7 @@
 import express from "express";
-import taskRoutes from "./routes/taskRoutes";
-import userRoutes from "./routes/userRoutes";
+import taskRoutes from "./features/task/routes/taskRoutes";
+import userRoutes from "./features/user/routes/userRoutes";
+
 const app = express();
 const PORT = 3000;
 
