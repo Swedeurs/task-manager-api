@@ -1,5 +1,5 @@
 import request from "supertest";
-import app from "../../../app";
+import app from "./app";
 
 describe("Task Routes", () => {
   it("should create a task", async () => {

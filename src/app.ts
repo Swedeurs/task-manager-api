@@ -1,5 +1,5 @@
 import express from "express";
-import taskRoutes from "./features/task/routes/taskRoutes";
+import taskRoutes from "./features/task/router";
 import userRoutes from "./features/user/routes/userRoutes";
 
 const app = express();

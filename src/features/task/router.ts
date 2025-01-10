@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request, Response } from "express";
-import * as TaskService from "../services/taskService";
-import { validateUpdateTask } from "../validation/taskValidation";
-import router from "../../user/routes/userRoutes";
+import * as taskService from "./service";
+
+import router from "../user/routes/userRoutes";
 
 router.patch(
   "/:id",
-  validateUpdateTask,
+  validateUpdateTask, //ska bort
   async (req: Request<{ id: string }>, res: Response): Promise<void> => {
     try {
-      const updatedTask = await TaskService.updateTask(req.params.id, req.body);
+      const updatedTask = await taskService.updateTask(req.params.id, req.body);
       if (!updatedTask) {
-        res.status(404).json({ error: "Task not found" });
+        res.sendStatus(404);
         return;
       }
       res.json(updatedTask);
@@ -27,11 +27,7 @@ router.delete(
   "/:id",
   async (req: Request<{ id: string }>, res: Response): Promise<void> => {
     try {
-      const success = await TaskService.deleteTask(req.params.id);
-      if (!success) {
-        res.status(404).json({ error: "Task not found" });
-        return;
-      }
+      await taskService.deleteTask(req.params.id);
       res.status(204).send();
     } catch (error) {
       res

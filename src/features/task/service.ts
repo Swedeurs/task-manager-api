@@ -1,4 +1,4 @@
-import { Task, TaskSchema } from "../models/task";
+import { Task, TaskSchema } from "./validation";
 
 
 const tasks: Task[] = [];
