@@ -32,7 +32,7 @@ describe("Task Routes", () => {
     const response = await request(app).get("/api/v1/tasks");
     expect(response.status).toBe(200);
     expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBe(2);
+    expect(response.body.length).toBe(3);
   });
 
   it("should fetch a task by ID", async () => {

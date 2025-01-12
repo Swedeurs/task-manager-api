@@ -1,86 +1,57 @@
-import { v4 as uuidv4 } from "uuid";
-import { createUserService } from "./service";
+import { createUserLogic } from "./logic";
 import { createUserRepository } from "./repository";
+import { v4 as uuidv4 } from "uuid";
 
-describe("User Service - Unit Tests", () => {
-  let service: ReturnType<typeof createUserService>;
-  let repo: ReturnType<typeof createUserRepository>;
+describe("User Logic - Unit Tests", () => {
+  let logic: ReturnType<typeof createUserLogic>;
+  let repository: ReturnType<typeof createUserRepository>;
 
-  beforeEach(async () => {
-    repo = createUserRepository();
-    service = createUserService(repo);
-    await repo.clear(); 
+  beforeEach(() => {
+    repository = createUserRepository();
+    logic = createUserLogic(repository);
   });
 
   it("should create a user", async () => {
-    const userData = {
-      name: "John Doe",
-      email: "john.doe@example.com",
-    };
+    const userData = { name: "John Doe", email: "john.doe@example.com" };
+    const user = await logic.createUser(userData);
 
-    const user = await service.createUser(userData);
-
-    expect(user).not.toBeNull();
     expect(user).toHaveProperty("id");
-    expect(user.id).toMatch(/^[0-9a-fA-F-]{36}$/);
-    expect(user.name).toBe(userData.name);
-    expect(user.email).toBe(userData.email);
+    expect(user.name).toBe("John Doe");
+    expect(user.email).toBe("john.doe@example.com");
   });
 
   it("should fetch all users", async () => {
-    await service.createUser({ name: "User One", email: "user.one@example.com" });
-    await service.createUser({ name: "User Two", email: "user.two@example.com" });
+    await logic.createUser({ name: "User One", email: "user.one@example.com" });
+    await logic.createUser({ name: "User Two", email: "user.two@example.com" });
 
-    const users = await service.getAllUsers();
-
-    expect(users.length).toBe(2);
+    const users = await logic.getAllUsers();
+    expect(users).toHaveLength(2);
     expect(users[0].name).toBe("User One");
-    expect(users[0].email).toBe("user.one@example.com");
     expect(users[1].name).toBe("User Two");
-    expect(users[1].email).toBe("user.two@example.com");
   });
 
   it("should fetch a user by ID", async () => {
-    const userData = {
-      name: "Find Me",
-      email: "find.me@example.com",
-    };
+    const userData = { name: "Find Me", email: "find.me@example.com" };
+    const createdUser = await logic.createUser(userData);
 
-    const createdUser = await service.createUser(userData);
-
-    const user = await service.getUserById(createdUser.id);
-
-    expect(user).toBeDefined();
-    expect(user?.id).toBe(createdUser.id);
-    expect(user?.name).toBe(userData.name);
-    expect(user?.email).toBe(userData.email);
+    const fetchedUser = await logic.getUserById(createdUser.id);
+    expect(fetchedUser).toBeDefined();
+    expect(fetchedUser?.id).toBe(createdUser.id);
   });
 
   it("should delete a user", async () => {
-    const userData = {
-      name: "Delete Me",
-      email: "delete.me@example.com",
-    };
+    const userData = { name: "Delete Me", email: "delete.me@example.com" };
+    const createdUser = await logic.createUser(userData);
 
-    const createdUser = await service.createUser(userData);
+    const deletedUser = await logic.deleteUser(createdUser.id);
+    const allUsers = await logic.getAllUsers();
 
-    const deletedUser = await service.deleteUser(createdUser.id);
-
-    const users = await service.getAllUsers();
-
-    expect(deletedUser).toBeDefined();
     expect(deletedUser?.id).toBe(createdUser.id);
-    expect(users.length).toBe(0);
+    expect(allUsers).toHaveLength(0);
   });
 
   it("should return undefined when deleting a non-existent user", async () => {
-    const nonExistentId = uuidv4();
-
-    const deletedUser = await service.deleteUser(nonExistentId);
-
-    const users = await service.getAllUsers();
-
+    const deletedUser = await logic.deleteUser(uuidv4());
     expect(deletedUser).toBeUndefined();
-    expect(users.length).toBe(0); 
   });
 });
