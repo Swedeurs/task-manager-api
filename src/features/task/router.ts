@@ -1,40 +1,45 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Request, Response } from "express";
-import * as taskService from "./service";
+import express from "express";
+import { TaskService } from "./service";
 
-import router from "../user/routes/userRoutes";
+export const createTaskRouter = (service: TaskService) => {
+  const router = express.Router();
 
-router.patch(
-  "/:id",
-  validateUpdateTask, //ska bort
-  async (req: Request<{ id: string }>, res: Response): Promise<void> => {
-    try {
-      const updatedTask = await taskService.updateTask(req.params.id, req.body);
-      if (!updatedTask) {
-        res.sendStatus(404);
-        return;
-      }
-      res.json(updatedTask);
-    } catch (error) {
-      res
-        .status(500)
-        .json({ error: "An error occurred while updating the task" });
+  router.get("/", async (_req, res) => {
+    const tasks = await service.getAllTasks();
+    res.status(200).json(tasks);
+  });
+
+  router.get("/:id", async (req, res) => {
+    const task = await service.getTask(req.params.id);
+    if (!task) {
+      res.status(404).json({ error: "Task not found" });
+      return;
     }
-  },
-);
+    res.status(200).json(task);
+  });
 
-router.delete(
-  "/:id",
-  async (req: Request<{ id: string }>, res: Response): Promise<void> => {
-    try {
-      await taskService.deleteTask(req.params.id);
-      res.status(204).send();
-    } catch (error) {
-      res
-        .status(500)
-        .json({ error: "An error occurred while deleting the task" });
+  router.post("/", async (req, res) => {
+    const task = await service.createTask(req.body);
+    res.status(201).json(task);
+  });
+
+  router.patch("/:id", async (req, res) => {
+    const updatedTask = await service.updateTask(req.params.id, req.body);
+    if (!updatedTask) {
+      res.status(404).json({ error: "Task not found" });
+      return;
     }
-  },
-);
+    res.status(200).json(updatedTask);
+  });
 
-export default router;
+  router.delete("/:id", async (req, res) => {
+    const deletedTask = await service.removeTask(req.params.id);
+    if (!deletedTask) {
+      res.status(404).json({ error: "Task not found" });
+      return;
+    }
+    res.status(200).json(deletedTask);
+  });
+
+  return router;
+};

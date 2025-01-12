@@ -1,33 +1,39 @@
-import { Task, TaskSchema } from "./validation";
+import { v4 as uuidv4 } from "uuid";
+import { TaskCreateSchema, TaskUpdateSchema } from "./validation";
+import { TaskRepository } from "./repository";
+
+export const createTaskService = (repo: TaskRepository) => ({
+  getAllTasks: async () => repo.getAll(),
+
+  getTask: async (id: string) => {
+    const task = await repo.getById(id);
+    return task || undefined;
+  },
+
+  createTask: async (data: typeof TaskCreateSchema._type) => {
+    const taskData = TaskCreateSchema.parse(data);
+    const exists = (await repo.getAll()).some(task => task.title === taskData.title);
 
 
-const tasks: Task[] = [];
+    if (exists) return null;
 
-export const getAllTasks = async (): Promise<Task[]> => tasks;
+    const newTask = { id: uuidv4(), ...taskData };
+    return repo.create(newTask);
+  },
 
-export const createTask = async (taskData: Partial<Task>): Promise<Task> => {
-  const task = TaskSchema.parse({ ...taskData });
-  tasks.push(task);
-  return task;
-};
+  updateTask: async (id: string, data: typeof TaskUpdateSchema._type) => {
+    const updateData = TaskUpdateSchema.parse(data);
+    const updatedTask = await repo.update(id, updateData);
 
-export const getTaskById = async (id: string): Promise<Task | undefined> => {
-  return tasks.find((task) => task.id === id);
-};
 
-export const updateTask = async (
-  id: string,
-  data: Partial<Task>
-): Promise<Task | undefined> => {
-  const index = tasks.findIndex((task) => task.id === id);
-  if (index === -1) return undefined;
-  tasks[index] = { ...tasks[index], ...data };
-  return tasks[index];
-};
+    return updatedTask || undefined;
+  },
 
-export const deleteTask = async (id: string): Promise<boolean> => {
-  const index = tasks.findIndex((task) => task.id === id);
-  if (index === -1) return false;
-  tasks.splice(index, 1);
-  return true;
-};
+  removeTask: async (id: string) => {
+    const removedTask = await repo.remove(id);
+
+    return removedTask || undefined;
+  },
+});
+
+export type TaskService = ReturnType<typeof createTaskService>;

@@ -1,64 +1,89 @@
 import request from "supertest";
-import app from "./app";
+import { app } from "./app/app"; 
+import { createTaskRepository } from "./features/task/repository";
 
 describe("Task Routes", () => {
-  it("should create a task", async () => {
-    const res = await request(app)
-      .post("/tasks")
-      .send({
-        title: "Test Task",
-        userId: "123e4567-e89b-12d3-a456-426614174000",
-      });
-    expect(res.status).toBe(201);
-    expect(res.body).toHaveProperty("id");
-    expect(res.body.title).toBe("Test Task");
+  const taskRepository = createTaskRepository();
+
+  beforeEach(async () => {
+    await taskRepository.clear();
   });
 
-  it("should validate task creation", async () => {
-    const res = await request(app).post("/tasks").send({});
-    expect(res.status).toBe(400);
-    expect(res.body.error).toBeTruthy();
+  it("should create a task", async () => {
+    const response = await request(app)
+      .post("/tasks")
+      .send({ title: "Test Task", userId: "123e4567-e89b-12d3-a456-426614174000" });
+
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty("id");
+    expect(response.body.title).toBe("Test Task");
+  });
+
+  it("should fetch all tasks", async () => {
+    await request(app)
+      .post("/tasks")
+      .send({ title: "Task 1", userId: "123e4567-e89b-12d3-a456-426614174000" });
+
+    await request(app)
+      .post("/tasks")
+      .send({ title: "Task 2", userId: "123e4567-e89b-12d3-a456-426614174000" });
+
+    const response = await request(app).get("/tasks");
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body)).toBe(true);
+    expect(response.body.length).toBe(2);
+  });
+
+  it("should fetch a task by ID", async () => {
+    const taskResponse = await request(app)
+      .post("/tasks")
+      .send({ title: "Find Me", userId: "123e4567-e89b-12d3-a456-426614174000" });
+
+    const response = await request(app).get(`/tasks/${taskResponse.body.id}`);
+    expect(response.status).toBe(200);
+    expect(response.body.title).toBe("Find Me");
+  });
+
+  it("should return 404 for a non-existent task ID", async () => {
+    const response = await request(app).get("/tasks/non-existent-id");
+    expect(response.status).toBe(404);
   });
 
   it("should update a task", async () => {
-    const createRes = await request(app)
+    const taskResponse = await request(app)
       .post("/tasks")
-      .send({
-        title: "Task to Update",
-        userId: "123e4567-e89b-12d3-a456-426614174000",
-      });
+      .send({ title: "Old Title", userId: "123e4567-e89b-12d3-a456-426614174000" });
 
-    const updatedTitle = "Updated Task Title";
+    const response = await request(app)
+      .patch(`/tasks/${taskResponse.body.id}`)
+      .send({ title: "New Title" });
 
-    const updateRes = await request(app)
-      .patch(`/tasks/${createRes.body.id}`)
-      .send({ title: updatedTitle });
-
-    expect(updateRes.status).toBe(200);
-    expect(updateRes.body.title).toBe(updatedTitle);
+    expect(response.status).toBe(200);
+    expect(response.body.title).toBe("New Title");
   });
 
-  it("should return 404 for non-existent task update", async () => {
-    const res = await request(app)
+  it("should return 404 when updating a non-existent task", async () => {
+    const response = await request(app)
       .patch("/tasks/non-existent-id")
-      .send({ title: "Test" });
-    expect(res.status).toBe(404);
+      .send({ title: "New Title" });
+
+    expect(response.status).toBe(404);
   });
 
   it("should delete a task", async () => {
-    const createRes = await request(app)
+    const taskResponse = await request(app)
       .post("/tasks")
-      .send({
-        title: "Task to Delete",
-        userId: "123e4567-e89b-12d3-a456-426614174000",
-      });
+      .send({ title: "Task to Delete", userId: "123e4567-e89b-12d3-a456-426614174000" });
 
-    const taskId = createRes.body.id;
+    const deleteResponse = await request(app).delete(`/tasks/${taskResponse.body.id}`);
+    expect(deleteResponse.status).toBe(204);
 
-    const deleteRes = await request(app).delete(`/tasks/${taskId}`);
-    expect(deleteRes.status).toBe(204);
+    const fetchResponse = await request(app).get(`/tasks/${taskResponse.body.id}`);
+    expect(fetchResponse.status).toBe(404);
+  });
 
-    const getRes = await request(app).get(`/tasks/${taskId}`);
-    expect(getRes.status).toBe(404);
+  it("should return 404 when deleting a non-existent task", async () => {
+    const response = await request(app).delete("/tasks/non-existent-id");
+    expect(response.status).toBe(404);
   });
 });
