@@ -1,14 +1,12 @@
 import { app } from ".";
 import {
   createTaskRepository,
-  createTaskRouter,
   createTaskService,
-} from "../features/task";
-import {
+  createTaskRouter,
   createUserRepository,
   createUserService,
   createUserRouter,
-} from "../features/user";
+} from "../features";
 
 export const initApp = () => {
   const taskRouter = (() => {
