@@ -1,6 +1,5 @@
 import { app } from ".";
-import { createTaskRouter } from "../features/task";
-import { createUserRouter } from "../features/user";
+import { createTaskRouter, createUserRouter } from "../features";
 
 export const initApp = () => {
   const taskRouter = createTaskRouter();
