@@ -15,7 +15,7 @@ export const createUserLogic = (repository: UserRepository) => ({
 
   updateUser: async (
     id: string,
-    data: Partial<User>
+    data: Partial<User>,
   ): Promise<User | undefined> => {
     return repository.update(id, data);
   },
@@ -23,7 +23,6 @@ export const createUserLogic = (repository: UserRepository) => ({
   deleteUser: async (id: string): Promise<User | undefined> => {
     return repository.remove(id);
   },
-
 });
 
 export type UserLogic = ReturnType<typeof createUserLogic>;

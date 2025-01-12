@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-
 export const TaskSchema = z.object({
   id: z.string().uuid(),
   title: z.string(),
@@ -8,7 +7,6 @@ export const TaskSchema = z.object({
   status: z.enum(["pending", "in-progress", "completed"]).default("pending"),
   userId: z.string().uuid(),
 });
-
 
 export const TaskCreateSchema = TaskSchema.omit({ id: true });
 export const TaskUpdateSchema = TaskSchema.partial();

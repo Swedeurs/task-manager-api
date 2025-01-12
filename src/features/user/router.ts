@@ -28,7 +28,6 @@ export const createUserRouter = (service: UserService) => {
       }
     }
   });
-  
 
   router.patch("/:id", async (req, res) => {
     const updatedUser = await service.updateUser(req.params.id, req.body);

@@ -13,7 +13,11 @@ describe("Task Logic - Unit Tests", () => {
   });
 
   it("should create a task", async () => {
-    const taskData: TaskCreate = { title: "Task 1", userId: uuidv4(), status: "pending" };
+    const taskData: TaskCreate = {
+      title: "Task 1",
+      userId: uuidv4(),
+      status: "pending",
+    };
     const task = await logic.createTask(taskData);
 
     expect(task).toHaveProperty("id");
@@ -34,7 +38,11 @@ describe("Task Logic - Unit Tests", () => {
   });
 
   it("should fetch a task by ID", async () => {
-    const taskData: TaskCreate = { title: "Find Me", userId: uuidv4(), status: "pending" };
+    const taskData: TaskCreate = {
+      title: "Find Me",
+      userId: uuidv4(),
+      status: "pending",
+    };
     const createdTask = await logic.createTask(taskData);
 
     const task = await logic.getTaskById(createdTask.id);
@@ -51,10 +59,16 @@ describe("Task Logic - Unit Tests", () => {
   });
 
   it("should update a task", async () => {
-    const taskData: TaskCreate = { title: "Old Title", userId: uuidv4(), status: "pending" };
+    const taskData: TaskCreate = {
+      title: "Old Title",
+      userId: uuidv4(),
+      status: "pending",
+    };
     const createdTask = await logic.createTask(taskData);
 
-    const updatedTask = await logic.updateTask(createdTask.id, { title: "New Title" });
+    const updatedTask = await logic.updateTask(createdTask.id, {
+      title: "New Title",
+    });
 
     expect(updatedTask).toBeDefined();
     expect(updatedTask?.title).toBe("New Title");
@@ -63,13 +77,19 @@ describe("Task Logic - Unit Tests", () => {
   it("should return undefined when updating a non-existent task", async () => {
     const nonExistentId = uuidv4();
 
-    const updatedTask = await logic.updateTask(nonExistentId, { title: "New Title" });
+    const updatedTask = await logic.updateTask(nonExistentId, {
+      title: "New Title",
+    });
 
     expect(updatedTask).toBeUndefined();
   });
 
   it("should delete a task", async () => {
-    const taskData: TaskCreate = { title: "Task to Delete", userId: uuidv4(), status: "pending" };
+    const taskData: TaskCreate = {
+      title: "Task to Delete",
+      userId: uuidv4(),
+      status: "pending",
+    };
     const createdTask = await logic.createTask(taskData);
 
     const deletedTask = await logic.deleteTask(createdTask.id);

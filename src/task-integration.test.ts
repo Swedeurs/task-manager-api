@@ -3,7 +3,7 @@ import { initApp } from "./app/init-app";
 import { createTaskRepository } from "./features/task";
 
 describe("Task Routes", () => {
-  const app = initApp(); 
+  const app = initApp();
 
   beforeEach(async () => {
     const taskRepo = createTaskRepository();
@@ -13,7 +13,10 @@ describe("Task Routes", () => {
   it("should create a task", async () => {
     const response = await request(app)
       .post("/api/v1/tasks")
-      .send({ title: "Test Task", userId: "123e4567-e89b-12d3-a456-426614174000" });
+      .send({
+        title: "Test Task",
+        userId: "123e4567-e89b-12d3-a456-426614174000",
+      });
 
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty("id");
@@ -23,11 +26,17 @@ describe("Task Routes", () => {
   it("should fetch all tasks", async () => {
     await request(app)
       .post("/api/v1/tasks")
-      .send({ title: "Task 1", userId: "123e4567-e89b-12d3-a456-426614174000" });
+      .send({
+        title: "Task 1",
+        userId: "123e4567-e89b-12d3-a456-426614174000",
+      });
 
     await request(app)
       .post("/api/v1/tasks")
-      .send({ title: "Task 2", userId: "123e4567-e89b-12d3-a456-426614174000" });
+      .send({
+        title: "Task 2",
+        userId: "123e4567-e89b-12d3-a456-426614174000",
+      });
 
     const response = await request(app).get("/api/v1/tasks");
     expect(response.status).toBe(200);
@@ -38,9 +47,14 @@ describe("Task Routes", () => {
   it("should fetch a task by ID", async () => {
     const taskResponse = await request(app)
       .post("/api/v1/tasks")
-      .send({ title: "Find Me", userId: "123e4567-e89b-12d3-a456-426614174000" });
+      .send({
+        title: "Find Me",
+        userId: "123e4567-e89b-12d3-a456-426614174000",
+      });
 
-    const response = await request(app).get(`/api/v1/tasks/${taskResponse.body.id}`);
+    const response = await request(app).get(
+      `/api/v1/tasks/${taskResponse.body.id}`,
+    );
     expect(response.status).toBe(200);
     expect(response.body.title).toBe("Find Me");
   });
@@ -53,7 +67,10 @@ describe("Task Routes", () => {
   it("should update a task", async () => {
     const taskResponse = await request(app)
       .post("/api/v1/tasks")
-      .send({ title: "Old Title", userId: "123e4567-e89b-12d3-a456-426614174000" });
+      .send({
+        title: "Old Title",
+        userId: "123e4567-e89b-12d3-a456-426614174000",
+      });
 
     const response = await request(app)
       .patch(`/api/v1/tasks/${taskResponse.body.id}`)
@@ -74,12 +91,19 @@ describe("Task Routes", () => {
   it("should delete a task", async () => {
     const taskResponse = await request(app)
       .post("/api/v1/tasks")
-      .send({ title: "Task to Delete", userId: "123e4567-e89b-12d3-a456-426614174000" });
+      .send({
+        title: "Task to Delete",
+        userId: "123e4567-e89b-12d3-a456-426614174000",
+      });
 
-    const deleteResponse = await request(app).delete(`/api/v1/tasks/${taskResponse.body.id}`);
+    const deleteResponse = await request(app).delete(
+      `/api/v1/tasks/${taskResponse.body.id}`,
+    );
     expect(deleteResponse.status).toBe(200);
 
-    const fetchResponse = await request(app).get(`/api/v1/tasks/${taskResponse.body.id}`);
+    const fetchResponse = await request(app).get(
+      `/api/v1/tasks/${taskResponse.body.id}`,
+    );
     expect(fetchResponse.status).toBe(404);
   });
 

@@ -1,16 +1,27 @@
 import { app } from ".";
-import { createTaskRepository, createTaskService, createTaskRouter } from "../features/task";
-import { createUserRepository, createUserService, createUserRouter } from "../features/user";
+import {
+  createTaskRepository,
+  createTaskRouter,
+  createTaskService,
+} from "../features/task";
+import {
+  createUserRepository,
+  createUserService,
+  createUserRouter,
+} from "../features/user";
 
 export const initApp = () => {
-  const taskRepository = createTaskRepository();
-  const taskService = createTaskService(taskRepository);
-  const taskRouter = createTaskRouter(taskService);
+  const taskRouter = (() => {
+    const repository = createTaskRepository();
+    const service = createTaskService(repository);
+    return createTaskRouter(service);
+  })();
 
-  const userRepository = createUserRepository();
-  const userService = createUserService(userRepository);
-  const userRouter = createUserRouter(userService);
+  const userRouter = (() => {
+    const repository = createUserRepository();
+    const service = createUserService(repository);
+    return createUserRouter(service);
+  })();
 
   return app(taskRouter, userRouter);
 };
-

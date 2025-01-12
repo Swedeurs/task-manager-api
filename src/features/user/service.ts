@@ -22,7 +22,7 @@ export const createUserService = (repo: UserRepository) => ({
 
   deleteUser: async (id: string) => {
     const deletedUser = await repo.remove(id);
-    return deletedUser;;
+    return deletedUser;
   },
 });
 
