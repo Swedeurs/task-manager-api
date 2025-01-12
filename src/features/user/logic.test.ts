@@ -1,6 +1,6 @@
 import { createUserLogic } from "./logic";
 import { createUserRepository } from "./repository";
-import { v4 as uuidv4 } from "uuid";
+import { UserCreate } from "./validations";
 
 describe("User Logic - Unit Tests", () => {
   let logic: ReturnType<typeof createUserLogic>;
@@ -8,50 +8,71 @@ describe("User Logic - Unit Tests", () => {
 
   beforeEach(() => {
     repository = createUserRepository();
-    logic = createUserLogic(repository);
+    logic = createUserLogic();
   });
 
-  it("should create a user", async () => {
-    const userData = { name: "John Doe", email: "john.doe@example.com" };
-    const user = await logic.createUser(userData);
+  it("should validate and create a user", () => {
+    const userData: UserCreate = { name: "John Doe", email: "john.doe@example.com" };
+    const validatedData = logic.validateUserCreate(userData);
+    const user = logic.generateUser(validatedData);
 
     expect(user).toHaveProperty("id");
     expect(user.name).toBe("John Doe");
     expect(user.email).toBe("john.doe@example.com");
   });
 
-  it("should fetch all users", async () => {
-    await logic.createUser({ name: "User One", email: "user.one@example.com" });
-    await logic.createUser({ name: "User Two", email: "user.two@example.com" });
+  it("should add a user to the repository", async () => {
+    const userData: UserCreate = { name: "User One", email: "user.one@example.com" };
+    const validatedData = logic.validateUserCreate(userData);
+    const user = logic.generateUser(validatedData);
 
-    const users = await logic.getAllUsers();
-    expect(users).toHaveLength(2);
-    expect(users[0].name).toBe("User One");
-    expect(users[1].name).toBe("User Two");
+    await repository.create(user);
+
+    const allUsers = await repository.getAll();
+    expect(allUsers).toHaveLength(1);
+    expect(allUsers[0].name).toBe("User One");
   });
 
-  it("should fetch a user by ID", async () => {
-    const userData = { name: "Find Me", email: "find.me@example.com" };
-    const createdUser = await logic.createUser(userData);
+  it("should fetch all users from the repository", async () => {
+    const userData1: UserCreate = { name: "User One", email: "user.one@example.com" };
+    const userData2: UserCreate = { name: "User Two", email: "user.two@example.com" };
 
-    const fetchedUser = await logic.getUserById(createdUser.id);
+    await repository.create(logic.generateUser(logic.validateUserCreate(userData1)));
+    await repository.create(logic.generateUser(logic.validateUserCreate(userData2)));
+
+    const allUsers = await repository.getAll();
+    expect(allUsers).toHaveLength(2);
+    expect(allUsers[0].name).toBe("User One");
+    expect(allUsers[1].name).toBe("User Two");
+  });
+
+  it("should fetch a user by ID from the repository", async () => {
+    const userData: UserCreate = { name: "Find Me", email: "find.me@example.com" };
+    const user = logic.generateUser(logic.validateUserCreate(userData));
+
+    await repository.create(user);
+
+    const fetchedUser = await repository.getById(user.id);
     expect(fetchedUser).toBeDefined();
-    expect(fetchedUser?.id).toBe(createdUser.id);
+    expect(fetchedUser?.id).toBe(user.id);
+    expect(fetchedUser?.name).toBe("Find Me");
   });
 
-  it("should delete a user", async () => {
-    const userData = { name: "Delete Me", email: "delete.me@example.com" };
-    const createdUser = await logic.createUser(userData);
+  it("should delete a user from the repository", async () => {
+    const userData: UserCreate = { name: "Delete Me", email: "delete.me@example.com" };
+    const user = logic.generateUser(logic.validateUserCreate(userData));
 
-    const deletedUser = await logic.deleteUser(createdUser.id);
-    const allUsers = await logic.getAllUsers();
+    await repository.create(user);
 
-    expect(deletedUser?.id).toBe(createdUser.id);
+    const deletedUser = await repository.remove(user.id);
+    const allUsers = await repository.getAll();
+
+    expect(deletedUser?.id).toBe(user.id);
     expect(allUsers).toHaveLength(0);
   });
 
-  it("should return undefined when deleting a non-existent user", async () => {
-    const deletedUser = await logic.deleteUser(uuidv4());
+  it("should return undefined when deleting a non-existent user from the repository", async () => {
+    const deletedUser = await repository.remove("non-existent-id");
     expect(deletedUser).toBeUndefined();
   });
 });

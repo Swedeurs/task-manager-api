@@ -1,27 +1,16 @@
-import { User, UserCreate, UserCreateSchema } from "./validations";
-import { UserRepository } from "./repository";
+import { User, UserCreate, UserCreateSchema, UserSchema } from "./validations";
 
-export const createUserLogic = (repository: UserRepository) => ({
-  getAllUsers: async (): Promise<User[]> => repository.getAll(),
-
-  getUserById: async (id: string): Promise<User | undefined> =>
-    repository.getById(id),
-
-  createUser: async (data: UserCreate): Promise<User> => {
-    const validatedData = UserCreateSchema.parse(data);
-    const user: User = { id: crypto.randomUUID(), ...validatedData };
-    return repository.create(user);
+export const createUserLogic = () => ({
+  validateUserCreate: (data: UserCreate): UserCreate => {
+    return UserCreateSchema.parse(data);
   },
 
-  updateUser: async (
-    id: string,
-    data: Partial<User>,
-  ): Promise<User | undefined> => {
-    return repository.update(id, data);
+  validateUserUpdate: (data: Partial<User>): Partial<User> => {
+    return UserSchema.partial().parse(data);
   },
 
-  deleteUser: async (id: string): Promise<User | undefined> => {
-    return repository.remove(id);
+  generateUser: (data: UserCreate): User => {
+    return { id: crypto.randomUUID(), ...data };
   },
 });
 

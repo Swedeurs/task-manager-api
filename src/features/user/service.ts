@@ -1,29 +1,28 @@
-import { v4 as uuidv4 } from "uuid";
-import { User, UserSchema } from "./validations";
 import { UserRepository } from "./repository";
+import { createUserLogic } from "./logic";
+import { User } from "./validations";
 
-export const createUserService = (repo: UserRepository) => ({
-  getAllUsers: async () => repo.getAll(),
+export const createUserService = (repo: UserRepository) => {
+  const logic = createUserLogic();
 
-  getUserById: async (id: string) => {
-    const user = await repo.getById(id);
-    return user;
-  },
+  return {
+    getAllUsers: async () => repo.getAll(),
 
-  createUser: async (data: Omit<User, "id">) => {
-    const userData = UserSchema.omit({ id: true }).parse(data);
-    const newUser = { id: uuidv4(), ...userData };
-    return repo.create(newUser);
-  },
-  updateUser: async (id: string, data: Partial<User>) => {
-    const updatedUser = await repo.update(id, data);
-    return updatedUser;
-  },
+    getUserById: async (id: string) => repo.getById(id),
 
-  deleteUser: async (id: string) => {
-    const deletedUser = await repo.remove(id);
-    return deletedUser;
-  },
-});
+    createUser: async (data: Omit<User, "id">) => {
+      const validatedData = logic.validateUserCreate(data);
+      const newUser = logic.generateUser(validatedData);
+      return repo.create(newUser);
+    },
+
+    updateUser: async (id: string, data: Partial<User>) => {
+      const validatedData = logic.validateUserUpdate(data);
+      return repo.update(id, validatedData);
+    },
+
+    deleteUser: async (id: string) => repo.remove(id),
+  };
+};
 
 export type UserService = ReturnType<typeof createUserService>;

@@ -1,6 +1,6 @@
 import request from "supertest";
 import { initApp } from "./app/init-app";
-import { createTaskRepository } from "./features/task";
+import { createTaskRepository } from "./features/task/repository";
 
 describe("Task Routes", () => {
   const app = initApp();
