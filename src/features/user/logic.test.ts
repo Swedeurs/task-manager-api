@@ -12,7 +12,10 @@ describe("User Logic - Unit Tests", () => {
   });
 
   it("should validate and create a user", () => {
-    const userData: UserCreate = { name: "John Doe", email: "john.doe@example.com" };
+    const userData: UserCreate = {
+      name: "John Doe",
+      email: "john.doe@example.com",
+    };
     const validatedData = logic.validateUserCreate(userData);
     const user = logic.generateUser(validatedData);
 
@@ -22,7 +25,10 @@ describe("User Logic - Unit Tests", () => {
   });
 
   it("should add a user to the repository", async () => {
-    const userData: UserCreate = { name: "User One", email: "user.one@example.com" };
+    const userData: UserCreate = {
+      name: "User One",
+      email: "user.one@example.com",
+    };
     const validatedData = logic.validateUserCreate(userData);
     const user = logic.generateUser(validatedData);
 
@@ -34,11 +40,21 @@ describe("User Logic - Unit Tests", () => {
   });
 
   it("should fetch all users from the repository", async () => {
-    const userData1: UserCreate = { name: "User One", email: "user.one@example.com" };
-    const userData2: UserCreate = { name: "User Two", email: "user.two@example.com" };
+    const userData1: UserCreate = {
+      name: "User One",
+      email: "user.one@example.com",
+    };
+    const userData2: UserCreate = {
+      name: "User Two",
+      email: "user.two@example.com",
+    };
 
-    await repository.create(logic.generateUser(logic.validateUserCreate(userData1)));
-    await repository.create(logic.generateUser(logic.validateUserCreate(userData2)));
+    await repository.create(
+      logic.generateUser(logic.validateUserCreate(userData1)),
+    );
+    await repository.create(
+      logic.generateUser(logic.validateUserCreate(userData2)),
+    );
 
     const allUsers = await repository.getAll();
     expect(allUsers).toHaveLength(2);
@@ -47,7 +63,10 @@ describe("User Logic - Unit Tests", () => {
   });
 
   it("should fetch a user by ID from the repository", async () => {
-    const userData: UserCreate = { name: "Find Me", email: "find.me@example.com" };
+    const userData: UserCreate = {
+      name: "Find Me",
+      email: "find.me@example.com",
+    };
     const user = logic.generateUser(logic.validateUserCreate(userData));
 
     await repository.create(user);
@@ -59,7 +78,10 @@ describe("User Logic - Unit Tests", () => {
   });
 
   it("should delete a user from the repository", async () => {
-    const userData: UserCreate = { name: "Delete Me", email: "delete.me@example.com" };
+    const userData: UserCreate = {
+      name: "Delete Me",
+      email: "delete.me@example.com",
+    };
     const user = logic.generateUser(logic.validateUserCreate(userData));
 
     await repository.create(user);
