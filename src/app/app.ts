@@ -17,10 +17,9 @@ export const app = (tasksRouter: Router, usersRouter: Router) => {
 
   app.use(
     (
-      err: any,
+      err: Error,
       _req: express.Request,
       res: express.Response,
-      _next: express.NextFunction,
     ) => {
       console.error(err);
       res.status(500).json({ error: "Internal Server Error" });
