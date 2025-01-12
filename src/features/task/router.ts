@@ -1,7 +1,10 @@
 import express from "express";
-import { TaskService } from "./service";
+import { createTaskRepository } from "./repository";
+import { createTaskService } from "./service";
 
-export const createTaskRouter = (service: TaskService) => {
+export const createTaskRouter = () => {
+  const repository = createTaskRepository();
+  const service = createTaskService(repository);
   const router = express.Router();
 
   router.get("/", async (_req, res) => {
