@@ -7,7 +7,7 @@ export const createUserService = (repo: UserRepository) => ({
 
   getUserById: async (id: string) => {
     const user = await repo.getById(id);
-    return user || undefined;
+    return user;
   },
 
   createUser: async (data: Omit<User, "id">) => {
@@ -17,12 +17,12 @@ export const createUserService = (repo: UserRepository) => ({
   },
   updateUser: async (id: string, data: Partial<User>) => {
     const updatedUser = await repo.update(id, data);
-    return updatedUser || undefined;
+    return updatedUser;
   },
 
   deleteUser: async (id: string) => {
     const deletedUser = await repo.remove(id);
-    return deletedUser || undefined;
+    return deletedUser;;
   },
 });
 

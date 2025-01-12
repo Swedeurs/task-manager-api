@@ -6,4 +6,6 @@ export const UserSchema = z.object({
   email: z.string().email("Invalid email format"),
 });
 
+export const UserCreateSchema = UserSchema.omit({ id: true });
 export type User = z.infer<typeof UserSchema>;
+export type UserCreate = z.infer<typeof UserCreateSchema>;
